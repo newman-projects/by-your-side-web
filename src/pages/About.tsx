@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Heart, Users, MapPin, Clock, ArrowLeft } from 'lucide-react'
+import { Heart, Users, MapPin, Clock, ArrowLeft, CheckCircle } from 'lucide-react'
 
 const locations = [
   'בני ברק', 'רמת גן', 'תל אביב', 'טבריה',
@@ -7,75 +7,67 @@ const locations = [
   'מודיעין', 'גוש עציון', 'כפר מלא',
 ]
 
-const team_values = [
-  {
-    icon: <Heart className="text-red-500" size={22} />,
-    title: 'אמפתיה',
-    desc: 'אנחנו מאמינים שכל גבר ראוי לשמיעה, כבוד וטיפול מקצועי ואנושי.',
-  },
-  {
-    icon: <Users className="text-[#0071e3]" size={22} />,
-    title: 'קהילה',
-    desc: 'יחד חזקים יותר. אנחנו בונים קהילה של תמיכה הדדית לאבות גרושים.',
-  },
-  {
-    icon: <MapPin className="text-green-500" size={22} />,
-    title: 'נגישות',
-    desc: 'שירותים בפריסה ארצית כדי שכל גבר בישראל יוכל לקבל עזרה.',
-  },
-  {
-    icon: <Clock className="text-orange-500" size={22} />,
-    title: 'מקצועיות',
-    desc: 'צוות מוסמך של עובדים סוציאליים, פסיכולוגים ומשפטנים.',
-  },
+const whoWeHelp = [
+  'אבות גרושים בכל שלבי ההליך',
+  'קורבנות ניכור הורי',
+  'גברים נפגעי אלימות פיזית ורגשית',
+  'מתמודדים עם האשמות שווא',
+  'חיילי מילואים ומשפחותיהם',
+  'גברים בהליכי גירושין מורכבים',
 ]
 
 export default function About() {
   return (
     <div dir="rtl" className="bg-white">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-50 to-white py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <h1 className="section-title mb-6">אודות לצדכם</h1>
-            <p className="section-subtitle leading-relaxed">
-              לצדכם הוא מרכז לתמיכה מקצועית, סיוע נפשי, טיפול ושיקום גברים נפגעי אלימות ואבות גרושים בישראל.
+      <section className="relative bg-[#F8FAFF] overflow-hidden pt-28 pb-20">
+        <div className="blob w-[500px] h-[500px] bg-[#dbeafe]/50 -top-20 -right-20" />
+        <div className="blob w-[300px] h-[300px] bg-[#ede9fe]/40 bottom-0 left-10" />
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+          <div className="max-w-2xl">
+            <p className="section-eyebrow mb-4">מי אנחנו</p>
+            <h1 className="section-heading mb-5">אודות לצדכם</h1>
+            <p className="section-lead">
+              מרכז לתמיכה מקצועית, סיוע נפשי, טיפול ושיקום גברים נפגעי אלימות ואבות גרושים בישראל — כבר מעל עשור.
             </p>
           </div>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 40" className="w-full block" preserveAspectRatio="none" style={{ height: 40 }}>
+            <path d="M0,40 C480,0 960,0 1440,40 L1440,40 L0,40 Z" fill="white" />
+          </svg>
         </div>
       </section>
 
       {/* Mission */}
       <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <span className="text-[#0071e3] text-[13px] font-semibold uppercase tracking-wider mb-3 block">המשימה שלנו</span>
-              <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold text-[#1d1d1f] mb-6 leading-tight">
-                אנחנו מאמינים שכל אבא ראוי לתמיכה
+              <p className="section-eyebrow mb-3">המשימה שלנו</p>
+              <h2 className="text-[clamp(1.75rem,4vw,2.75rem)] font-black text-[#111827] mb-6 leading-tight">
+                כל אבא ראוי<br />
+                <span className="text-[#1e40af]">לתמיכה ולהזדמנות</span>
               </h2>
-              <div className="space-y-5 text-[#86868b] text-[16px] leading-relaxed">
+              <div className="space-y-4 text-[#6b7280] text-[15px] leading-relaxed">
                 <p>
                   לצדכם הוקמה מתוך הכרה כי אבות רבים בישראל מוצאים את עצמם לבד מול מערכת מסובכת של גירושין, ניכור הורי, משמורת וסוגיות משפטיות — ללא תמיכה מקצועית ומותאמת.
                 </p>
                 <p>
                   אנחנו מספקים מרחב בטוח ומכבד בו גברים יכולים לקבל עזרה, לשתף, ולחזור לתפקד כאבות טובים ואנשים שלמים.
                 </p>
-                <p>
-                  הארגון פועל בשיתוף עם עובדים סוציאליים מוסמכים, פסיכולוגים, עורכי דין ומתנדבים רבים, ומציע שירותים בפריסה ארצית ב-11 ערים ברחבי ישראל.
-                </p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               {[
                 { num: '2,000+', label: 'גברים טיפלנו' },
-                { num: '10', label: 'שנות פעילות' },
-                { num: '11', label: 'סניפים ברחבי הארץ' },
-                { num: '50+', label: 'מתנדבים ומטפלים' },
+                { num: '10+', label: 'שנות פעילות' },
+                { num: '11', label: 'סניפים בארץ' },
+                { num: '50+', label: 'מטפלים ומתנדבים' },
               ].map((s, i) => (
-                <div key={i} className="bg-[#f5f5f7] rounded-2xl p-6 text-center">
-                  <div className="text-[2rem] font-bold text-[#0071e3] mb-1">{s.num}</div>
-                  <div className="text-[13px] text-[#86868b]">{s.label}</div>
+                <div key={i} className="bg-[#F8FAFF] rounded-2xl p-6 text-center border border-[#dbeafe]">
+                  <div className="text-[2rem] font-black text-[#1e40af] mb-1">{s.num}</div>
+                  <div className="text-[12px] text-[#6b7280] font-medium">{s.label}</div>
                 </div>
               ))}
             </div>
@@ -83,66 +75,61 @@ export default function About() {
         </div>
       </section>
 
-      {/* Who We Help */}
-      <section className="py-20 bg-[#f5f5f7]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <h2 className="section-title mb-4">למי אנחנו פונים</h2>
-            <p className="section-subtitle max-w-2xl mx-auto">
-              לצדכם עוזרת לגברים המתמודדים עם מצבי חיים מורכבים
-            </p>
-          </div>
+      {/* Who we help */}
+      <section className="py-20 bg-[#F8FAFF]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <p className="section-eyebrow mb-3">קהל היעד</p>
+              <h2 className="text-[clamp(1.75rem,4vw,2.5rem)] font-black text-[#111827] mb-6 leading-tight">
+                למי אנחנו פונים
+              </h2>
+              <ul className="space-y-3">
+                {whoWeHelp.map((item, i) => (
+                  <li key={i} className="flex items-center gap-3">
+                    <CheckCircle size={18} className="text-[#1e40af] flex-shrink-0" />
+                    <span className="text-[15px] text-[#1f2937] font-medium">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {[
-              { title: 'אבות גרושים', desc: 'גברים שעוברים תהליך גירושין ומתמודדים עם משמורת וקשר עם ילדיהם' },
-              { title: 'קורבנות ניכור הורי', desc: 'אבות שנמנעת מהם גישה לילדיהם עקב ניכור הורי מכוון' },
-              { title: 'נפגעי אלימות', desc: 'גברים הסובלים מאלימות פיזית, רגשית או מינית בתוך הקשר הזוגי' },
-              { title: 'מצבי האשמת שווא', desc: 'גברים המתמודדים עם האשמות שווא בהליכי גירושין ומשמורת' },
-              { title: 'מילואימניקים ומשפחות', desc: 'חיילי מילואים ומשפחותיהם הזקוקים לתמיכה נפשית בתקופות לחץ' },
-              { title: 'גברים בהליכי גירושין', desc: 'כל גבר החווה את משבר הגירושין וזקוק לסיוע מקצועי ורגשי' },
-            ].map((item, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 border border-black/5 card-hover">
-                <div className="w-2 h-2 rounded-full bg-[#0071e3] mb-4" />
-                <h3 className="text-[16px] font-semibold text-[#1d1d1f] mb-2">{item.title}</h3>
-                <p className="text-[14px] text-[#86868b] leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Values */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <h2 className="section-title mb-4">הערכים שלנו</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {team_values.map((v, i) => (
-              <div key={i} className="text-center p-6">
-                <div className="w-12 h-12 bg-[#f5f5f7] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  {v.icon}
-                </div>
-                <h3 className="text-[17px] font-semibold text-[#1d1d1f] mb-2">{v.title}</h3>
-                <p className="text-[14px] text-[#86868b] leading-relaxed">{v.desc}</p>
-              </div>
-            ))}
+            {/* Values */}
+            <div className="grid grid-cols-1 gap-4">
+              {[
+                { icon: Heart, color: '#f97316', bg: '#fff7ed', title: 'אמפתיה', desc: 'כל גבר ראוי לשמיעה, כבוד וטיפול מקצועי' },
+                { icon: Users, color: '#1e40af', bg: '#dbeafe', title: 'קהילה', desc: 'יחד חזקים יותר — תמיכה הדדית ואמיתית' },
+                { icon: MapPin, color: '#059669', bg: '#d1fae5', title: 'נגישות', desc: 'שירותים ב-11 ערים, לכל גבר בישראל' },
+                { icon: Clock, color: '#7c3aed', bg: '#ede9fe', title: 'מקצועיות', desc: 'עובדים סוציאליים, פסיכולוגים ומשפטנים' },
+              ].map((v, i) => {
+                const Icon = v.icon
+                return (
+                  <div key={i} className="card p-4 flex items-center gap-4 card-accent">
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: v.bg }}>
+                      <Icon size={18} style={{ color: v.color }} />
+                    </div>
+                    <div>
+                      <h3 className="text-[15px] font-bold text-[#111827]">{v.title}</h3>
+                      <p className="text-[13px] text-[#6b7280]">{v.desc}</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Locations */}
-      <section className="py-20 bg-[#f5f5f7]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="section-title mb-4">אנחנו בכל הארץ</h2>
-            <p className="section-subtitle">פעילים ב-{locations.length} מיקומים ברחבי ישראל</p>
-          </div>
+      <section className="py-20 bg-[#1e40af] relative overflow-hidden">
+        <div className="blob w-96 h-96 bg-[#2563eb]/60 -top-20 -right-20" />
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 text-center">
+          <h2 className="section-heading-white mb-3">אנחנו בכל הארץ</h2>
+          <p className="text-white/70 text-[16px] mb-10">פעילים ב-{locations.length} מיקומים ברחבי ישראל</p>
           <div className="flex flex-wrap gap-3 justify-center">
             {locations.map(city => (
-              <div key={city} className="flex items-center gap-1.5 bg-white px-4 py-2.5 rounded-full border border-black/5 text-[14px] text-[#1d1d1f] font-medium shadow-sm">
-                <MapPin size={13} className="text-[#0071e3]" />
+              <div key={city} className="flex items-center gap-1.5 bg-white/15 border border-white/25 text-white px-4 py-2.5 rounded-full text-[14px] font-medium backdrop-blur-sm">
+                <MapPin size={12} className="text-white/70" />
                 {city}
               </div>
             ))}
@@ -152,21 +139,17 @@ export default function About() {
 
       {/* CTA */}
       <section className="py-20 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-[clamp(1.6rem,4vw,2.4rem)] font-bold text-[#1d1d1f] mb-4">
+        <div className="max-w-3xl mx-auto px-5 sm:px-8 text-center">
+          <h2 className="text-[clamp(1.6rem,4vw,2.4rem)] font-black text-[#111827] mb-4">
             מוכנים להתחיל?
           </h2>
-          <p className="text-[#86868b] text-[16px] mb-8">
-            פנו אלינו היום וקבלו ייעוץ ראשוני ללא עלות.
-          </p>
-          <div className="flex gap-3 justify-center">
-            <Link to="/contact" className="apple-btn apple-btn-primary">
+          <p className="section-lead mb-8">פנו אלינו היום וקבלו ייעוץ ראשוני ללא עלות.</p>
+          <div className="flex gap-3 justify-center flex-wrap">
+            <Link to="/contact" className="btn btn-blue">
               צרו קשר
-              <ArrowLeft size={15} className="rotate-180" />
+              <ArrowLeft size={16} className="rotate-180" />
             </Link>
-            <Link to="/services" className="apple-btn apple-btn-secondary">
-              השירותים שלנו
-            </Link>
+            <Link to="/services" className="btn btn-outline">השירותים שלנו</Link>
           </div>
         </div>
       </section>

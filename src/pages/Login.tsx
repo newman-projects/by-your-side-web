@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, ArrowRight } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
@@ -14,100 +14,76 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    setError('')
-    try {
-      await login(email, password)
-      navigate('/')
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'שגיאה בכניסה. בדקו את הפרטים ונסו שוב.')
-    } finally {
-      setLoading(false)
-    }
+    setLoading(true); setError('')
+    try { await login(email, password); navigate('/') }
+    catch (err: unknown) { setError(err instanceof Error ? err.message : 'שגיאה בכניסה. בדקו את הפרטים.') }
+    finally { setLoading(false) }
   }
 
-  const inputClass = "w-full px-4 py-3 border border-black/10 rounded-xl text-[15px] bg-[#f5f5f7] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/25 focus:border-[#0071e3] transition-all placeholder-[#86868b]"
-
   return (
-    <div dir="rtl" className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50/30 flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex flex-col items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-[#0071e3] flex items-center justify-center shadow-md">
-              <span className="text-white font-bold text-lg">BY</span>
-            </div>
-            <span className="font-semibold text-[#1d1d1f] text-[17px]">לצדכם</span>
-          </Link>
-          <h1 className="text-[24px] font-bold text-[#1d1d1f] mt-6 mb-1">ברוכים הבאים</h1>
-          <p className="text-[#86868b] text-[14px]">היכנסו לחשבון שלכם</p>
-        </div>
+    <div dir="rtl" className="min-h-screen relative flex items-center justify-center px-4 py-12 overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 bg-[#F8FAFF]" />
+      <div className="blob w-[500px] h-[500px] bg-[#dbeafe]/60 -top-20 -right-20" />
+      <div className="blob w-[350px] h-[350px] bg-[#ede9fe]/50 bottom-0 left-0" />
 
-        <div className="bg-white rounded-3xl shadow-xl border border-black/5 p-8">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-[13px] font-medium text-[#1d1d1f] mb-1.5">אימייל</label>
-              <input
-                type="email"
-                required
-                placeholder="you@example.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className={inputClass}
-                dir="ltr"
-              />
-            </div>
+      <div className="relative w-full max-w-md">
+        {/* Back link */}
+        <Link to="/" className="inline-flex items-center gap-1.5 text-[#6b7280] text-[13px] hover:text-[#1e40af] transition-colors mb-6">
+          <ArrowRight size={14} />
+          חזרה לדף הבית
+        </Link>
 
-            <div>
-              <label className="block text-[13px] font-medium text-[#1d1d1f] mb-1.5">סיסמה</label>
-              <div className="relative">
-                <input
-                  type={showPass ? 'text' : 'password'}
-                  required
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  className={`${inputClass} pl-10`}
-                  dir="ltr"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPass(!showPass)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#86868b] hover:text-[#1d1d1f] transition-colors"
-                >
-                  {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
+        {/* Card */}
+        <div className="bg-white rounded-3xl shadow-2xl border border-[#dbeafe] overflow-hidden">
+          {/* Header strip */}
+          <div className="bg-gradient-to-br from-[#1e40af] to-[#2563eb] px-8 pt-8 pb-10 text-center">
+            <img src="/logo.png" alt="לצדכם" className="h-12 w-auto mx-auto mb-4 brightness-0 invert" />
+            <h1 className="text-[22px] font-black text-white">ברוכים הבאים</h1>
+            <p className="text-white/70 text-[14px] mt-1">היכנסו לחשבון שלכם</p>
+          </div>
+
+          <div className="px-8 py-8">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="label">כתובת אימייל</label>
+                <input type="email" required placeholder="you@example.com"
+                  value={email} onChange={e => setEmail(e.target.value)}
+                  className="input" dir="ltr" />
               </div>
+              <div>
+                <label className="label">סיסמה</label>
+                <div className="relative">
+                  <input type={showPass ? 'text' : 'password'} required placeholder="••••••••"
+                    value={password} onChange={e => setPassword(e.target.value)}
+                    className="input pl-10" dir="ltr" />
+                  <button type="button" onClick={() => setShowPass(!showPass)}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] hover:text-[#1e40af] transition-colors">
+                    {showPass ? <EyeOff size={17} /> : <Eye size={17} />}
+                  </button>
+                </div>
+              </div>
+
+              {error && (
+                <div className="bg-red-50 border border-red-100 text-red-600 text-[13px] px-4 py-3 rounded-xl">{error}</div>
+              )}
+
+              <button type="submit" disabled={loading}
+                className="btn btn-blue w-full justify-center mt-2 disabled:opacity-60">
+                {loading ? 'מתחבר...' : 'כניסה לחשבון'}
+              </button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <p className="text-[13px] text-[#6b7280]">
+                אין לכם חשבון?{' '}
+                <Link to="/signup" className="text-[#1e40af] font-bold hover:text-[#1c3a9e] transition-colors">
+                  הרשמו עכשיו
+                </Link>
+              </p>
             </div>
-
-            {error && (
-              <p className="text-red-500 text-[13px] bg-red-50 px-4 py-3 rounded-xl">{error}</p>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="apple-btn apple-btn-primary w-full text-[15px] mt-2 disabled:opacity-60"
-            >
-              {loading ? 'מתחבר...' : 'כניסה'}
-            </button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-[13px] text-[#86868b]">
-              אין לכם חשבון?{' '}
-              <Link to="/signup" className="text-[#0071e3] font-medium hover:text-[#0077ed]">
-                הרשמו עכשיו
-              </Link>
-            </p>
           </div>
         </div>
-
-        <p className="text-center text-[12px] text-[#86868b] mt-6">
-          <Link to="/" className="hover:text-[#1d1d1f] transition-colors">
-            ← חזרה לדף הבית
-          </Link>
-        </p>
       </div>
     </div>
   )
