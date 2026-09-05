@@ -11,6 +11,7 @@ import Volunteer from './pages/Volunteer'
 import Donate from './pages/Donate'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import CourtRulings from './pages/CourtRulings'
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/volunteer" element={<Volunteer />} />
               <Route path="/donate" element={<Donate />} />
+              <Route path="/court-rulings" element={<CourtRulings />} />
               <Route
                 path="*"
                 element={

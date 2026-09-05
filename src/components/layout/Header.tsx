@@ -17,7 +17,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
-  const { user, logout } = useAuth()
+  const { user, logout, isAdmin } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -96,6 +96,14 @@ export default function Header() {
                       <p className="text-[13px] font-semibold text-[#111827]">{user.full_name}</p>
                       <p className="text-[11px] text-[#6b7280] truncate mt-0.5">{user.email}</p>
                     </div>
+                    {isAdmin && (
+                      <a
+                        href="/court-rulings"
+                        className="flex items-center gap-2.5 w-full px-4 py-3 text-[13px] text-[#1e40af] hover:bg-[#F0F4FF] transition-colors font-medium border-b border-black/5"
+                      >
+                        פסיקות בית משפט
+                      </a>
+                    )}
                     <button
                       onClick={handleLogout}
                       className="flex items-center gap-2.5 w-full px-4 py-3 text-[13px] text-red-500 hover:bg-red-50 transition-colors font-medium"
