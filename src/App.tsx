@@ -13,6 +13,7 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import AuthCallback from './pages/AuthCallback'
 import CourtRulings from './pages/CourtRulings'
+import AdminGrants from './pages/AdminGrants'
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route path="/admin/grants" element={<AdminGrants />} />
       <Route
         path="/*"
         element={
