@@ -7,7 +7,8 @@ interface AuthState {
   token: string | null
   loading: boolean
   login: (email: string, password: string) => Promise<void>
-  signup: (email: string, password: string, fullName: string) => Promise<void>
+  signup: (email: string, password: string, fullName: string) => Promise<string>
+  loginWithTokens: (accessToken: string, profile?: User) => void
   logout: () => void
   isAdmin: boolean
 }
@@ -22,7 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (token) {
       authApi.me()
-        .then(setUser)
+        .then(res => setUser(res.user))
         .catch(() => { setToken(null); localStorage.removeItem('fastapi_token') })
         .finally(() => setLoading(false))
     } else {
@@ -32,16 +33,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     const res = await authApi.login({ email, password })
-    localStorage.setItem('fastapi_token', res.fastapi_token)
-    setToken(res.fastapi_token)
-    setUser(res.user)
+    localStorage.setItem('fastapi_token', res.access_token)
+    setToken(res.access_token)
+    setUser(res.user.profile)
   }
 
-  const signup = async (email: string, password: string, fullName: string) => {
+  const signup = async (email: string, password: string, fullName: string): Promise<string> => {
     const res = await authApi.signup({ email, password, full_name: fullName })
-    localStorage.setItem('fastapi_token', res.fastapi_token)
-    setToken(res.fastapi_token)
-    setUser(res.user)
+    return res.message
+  }
+
+  const loginWithTokens = (accessToken: string, profile?: User) => {
+    localStorage.setItem('fastapi_token', accessToken)
+    setToken(accessToken)
+    if (profile) setUser(profile)
   }
 
   const logout = () => {
@@ -54,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider value={{
       user, token, loading,
-      login, signup, logout,
+      login, signup, loginWithTokens, logout,
       isAdmin: user?.is_admin ?? false,
     }}>
       {children}

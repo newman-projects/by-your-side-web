@@ -1,7 +1,22 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Phone, Mail, MapPin, Clock } from 'lucide-react'
+import PhoneContactModal from '../ui/PhoneContactModal'
+
+const MAPS_URL = 'https://maps.google.com/?q=מצדה+9,+בני+ברק,+ישראל'
+const PHONE_TEL = 'tel:0527090457'
+
+function isOfficeOpen(): boolean {
+  const now = new Date()
+  const day = now.getDay()
+  const mins = now.getHours() * 60 + now.getMinutes()
+  return day >= 0 && day <= 4 && mins >= 510 && mins < 870
+}
 
 export default function Footer() {
+  const [showPhone, setShowPhone] = useState(false)
+  const open = isOfficeOpen()
+
   return (
     <footer dir="rtl">
       {/* Top wave */}
@@ -19,12 +34,16 @@ export default function Footer() {
                 מרכז לתמיכה מקצועית, סיוע נפשי, טיפול ושיקום לאבות גרושים וגברים נפגעי אלימות בישראל.
               </p>
               <div className="flex gap-3 mt-5">
-                <a href="tel:0527090457"
-                   className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/20 transition-colors">
+                <button
+                  onClick={() => setShowPhone(true)}
+                  className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/20 transition-colors"
+                  title="התקשרו / WhatsApp"
+                >
                   <Phone size={14} className="text-white" />
-                </a>
+                </button>
                 <a href="mailto:office.letsidchem@gmail.com"
-                   className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/20 transition-colors">
+                   className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/20 transition-colors"
+                   title="אימייל">
                   <Mail size={14} className="text-white" />
                 </a>
               </div>
@@ -70,9 +89,12 @@ export default function Footer() {
               <h4 className="text-white font-bold text-[12px] uppercase tracking-widest mb-5">צרו קשר</h4>
               <ul className="space-y-4">
                 <li>
-                  <a href="tel:0527090457" className="flex items-center gap-2.5 text-white/65 hover:text-white text-[13px] transition-colors">
+                  <button
+                    onClick={() => setShowPhone(true)}
+                    className="flex items-center gap-2.5 text-white/65 hover:text-white text-[13px] transition-colors"
+                  >
                     <Phone size={13} className="flex-shrink-0" />052-7090457
-                  </a>
+                  </button>
                 </li>
                 <li>
                   <a href="mailto:office.letsidchem@gmail.com" className="flex items-start gap-2.5 text-white/65 hover:text-white text-[13px] transition-colors">
@@ -80,14 +102,32 @@ export default function Footer() {
                   </a>
                 </li>
                 <li>
-                  <div className="flex items-start gap-2.5 text-white/65 text-[13px]">
+                  <a href={MAPS_URL} target="_blank" rel="noopener noreferrer"
+                     className="flex items-start gap-2.5 text-white/65 hover:text-white text-[13px] transition-colors">
                     <MapPin size={13} className="flex-shrink-0 mt-0.5" />
                     <span>מצדה 9, בני ברק<br />ראשון לציון | ירושלים | תל אביב</span>
-                  </div>
+                  </a>
                 </li>
                 <li>
-                  <div className="flex items-center gap-2.5 text-white/65 text-[13px]">
-                    <Clock size={13} className="flex-shrink-0" />א׳–ה׳, 08:30–14:30
+                  <div className="flex items-start gap-2.5 text-[13px]">
+                    <Clock size={13} className="flex-shrink-0 mt-0.5 text-white/65" />
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                        <span className="text-white/65">א׳–ה׳, 08:30–14:30</span>
+                        <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full ${open ? 'bg-green-500/25 text-green-400' : 'bg-red-500/25 text-red-400'}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${open ? 'bg-green-400' : 'bg-red-400'}`} />
+                          {open ? 'פתוח' : 'סגור'}
+                        </span>
+                      </div>
+                      {!open && (
+                        <button
+                          onClick={() => setShowPhone(true)}
+                          className="inline-flex items-center gap-1.5 text-[11px] font-bold text-white bg-red-600 hover:bg-red-500 px-2.5 py-1 rounded-lg transition-colors"
+                        >
+                          <Phone size={10} /> קו חירום
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </li>
               </ul>
@@ -105,6 +145,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
+      {showPhone && <PhoneContactModal onClose={() => setShowPhone(false)} />}
     </footer>
   )
 }

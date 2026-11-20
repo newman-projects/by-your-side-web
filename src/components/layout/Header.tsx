@@ -82,10 +82,10 @@ export default function Header() {
                   className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#F8FAFF] border border-[#dbeafe] hover:border-[#1e40af]/30 transition-colors"
                 >
                   <div className="w-7 h-7 rounded-full bg-[#1e40af] flex items-center justify-center text-white text-[12px] font-bold flex-shrink-0">
-                    {user.full_name.charAt(0)}
+                    {user.full_name?.charAt(0) ?? user.email?.charAt(0) ?? '?'}
                   </div>
                   <span className="text-[13px] font-medium text-[#1f2937] max-w-[90px] truncate hidden sm:block">
-                    {user.full_name.split(' ')[0]}
+                    {user.full_name?.split(' ')[0] ?? user.email}
                   </span>
                   <ChevronDown size={13} className={`text-[#6b7280] transition-transform ${profileOpen ? 'rotate-180' : ''}`} />
                 </button>

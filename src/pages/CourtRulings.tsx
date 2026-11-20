@@ -17,10 +17,11 @@ export default function CourtRulings() {
   const [error, setError] = useState<string | null>(null)
 
   const [triggerOpen, setTriggerOpen] = useState(false)
-  const [dateFrom, setDateFrom] = useState('')
+  const [dateFrom, setDateFrom] = useState('')  // YYYY-MM-DD (native date input value)
   const [dateTo, setDateTo] = useState('')
+  const [dateError, setDateError] = useState('')
   const [triggering, setTriggering] = useState(false)
-  const [triggerMsg, setTriggerMsg] = useState<string | null>(null)
+  const [triggerMsg, setTriggerMsg] = useState<{ text: string; ok: boolean } | null>(null)
 
   useEffect(() => {
     if (!authLoading && !isAdmin) navigate('/')
@@ -44,18 +45,51 @@ export default function CourtRulings() {
     if (isAdmin) fetchRulings(page)
   }, [isAdmin, page, fetchRulings])
 
+  // Convert YYYY-MM-DD → DD/MM/YYYY for the backend
+  const toILDate = (iso: string) => {
+    if (!iso) return ''
+    const [y, m, d] = iso.split('-')
+    return `${d}/${m}/${y}`
+  }
+
+  const validateDates = (): string => {
+    if (dateFrom && dateTo && dateFrom > dateTo)
+      return 'תאריך ההתחלה חייב להיות לפני תאריך הסיום'
+    const today = new Date().toISOString().slice(0, 10)
+    if (dateFrom && dateFrom > today)
+      return 'תאריך ההתחלה לא יכול להיות בעתיד'
+    if (dateTo && dateTo > today)
+      return 'תאריך הסיום לא יכול להיות בעתיד'
+    return ''
+  }
+
   const handleTrigger = async () => {
+    const err = validateDates()
+    if (err) { setDateError(err); return }
+    setDateError('')
     setTriggering(true)
     setTriggerMsg(null)
     try {
       const req: { date_from?: string; date_to?: string } = {}
-      if (dateFrom) req.date_from = dateFrom
-      if (dateTo) req.date_to = dateTo
+      if (dateFrom) req.date_from = toILDate(dateFrom)
+      if (dateTo)   req.date_to   = toILDate(dateTo)
       await courtRulingsApi.trigger(req)
-      setTriggerMsg('האיסוף הופעל בהצלחה. הפסיקות יופיעו בטבלה לאחר כמה דקות.')
+      setTriggerMsg({ text: 'האיסוף הופעל בהצלחה. הפסיקות יופיעו בטבלה לאחר כמה דקות.', ok: true })
       setTriggerOpen(false)
+      setDateFrom('')
+      setDateTo('')
     } catch (e: unknown) {
-      setTriggerMsg(e instanceof Error ? e.message : 'שגיאה בהפעלת האיסוף')
+      const raw = e instanceof Error ? e.message : 'שגיאה לא ידועה'
+      let friendly = raw
+      if (raw.includes('N8N_WEBHOOK_URL') || raw.includes('not configured'))
+        friendly = 'שגיאת תצורה: כתובת ה-webhook של n8n אינה מוגדרת. פנה למנהל המערכת.'
+      else if (raw.includes('Failed to trigger'))
+        friendly = 'לא ניתן להתחבר לשרות n8n. ייתכן שהשרת לא זמין — נסו שוב מאוחר יותר.'
+      else if (raw.includes('403') || raw.includes('Forbidden'))
+        friendly = 'שגיאת הרשאה: הגישה נדחתה. ייתכן שפג תוקף ההתחברות שלך.'
+      else if (raw.includes('500'))
+        friendly = 'שגיאת שרת פנימית. נסו שוב, ואם הבעיה נמשכת פנו לתמיכה.'
+      setTriggerMsg({ text: friendly, ok: false })
     } finally {
       setTriggering(false)
     }
@@ -105,48 +139,84 @@ export default function CourtRulings() {
 
         {/* Trigger success/error message */}
         {triggerMsg && (
-          <div className={`mb-6 p-4 rounded-xl text-[13px] font-medium ${
-            triggerMsg.includes('שגיאה')
-              ? 'bg-red-50 text-red-700 border border-red-200'
-              : 'bg-green-50 text-green-700 border border-green-200'
+          <div className={`mb-6 p-4 rounded-xl text-[13px] font-medium flex items-start gap-2 ${
+            triggerMsg.ok
+              ? 'bg-green-50 text-green-700 border border-green-200'
+              : 'bg-red-50 text-red-700 border border-red-200'
           }`}>
-            {triggerMsg}
+            <span>{triggerMsg.ok ? '✓' : '⚠'}</span>
+            <span>{triggerMsg.text}</span>
           </div>
         )}
 
         {/* Trigger modal */}
         {triggerOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={() => setTriggerOpen(false)}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={() => { setTriggerOpen(false); setDateError('') }}>
             <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-4" onClick={e => e.stopPropagation()}>
-              <h2 className="text-[18px] font-bold text-[#1e3a8a] mb-4">הפעל איסוף פסיקות</h2>
-              <p className="text-[13px] text-[#6b7280] mb-4">
-                השאר ריק לשימוש בתאריכי ברירת מחדל (שנה אחרונה). ניתן לציין טווח תאריכים ספציפי.
+              <h2 className="text-[18px] font-bold text-[#1e3a8a] mb-1">הפעל איסוף פסיקות</h2>
+              <p className="text-[13px] text-[#6b7280] mb-5">
+                השאירו ריק לשנה האחרונה, או בחרו טווח תאריכים ספציפי.
               </p>
-              <div className="flex flex-col gap-3 mb-6">
+
+              <div className="flex flex-col gap-4 mb-2">
                 <div>
-                  <label className="block text-[12px] font-semibold text-[#374151] mb-1">מתאריך (DD/MM/YYYY)</label>
+                  <label className="block text-[12px] font-semibold text-[#374151] mb-1.5">
+                    <span className="flex items-center gap-1.5">
+                      <Calendar size={12} className="text-[#1e40af]" />
+                      מתאריך
+                    </span>
+                  </label>
                   <input
-                    type="text"
-                    placeholder="01/01/2025"
+                    type="date"
                     value={dateFrom}
-                    onChange={e => setDateFrom(e.target.value)}
-                    className="w-full border border-[#e5e7eb] rounded-xl px-3 py-2 text-[13px] focus:outline-none focus:border-[#1e40af]"
+                    max={dateTo || new Date().toISOString().slice(0, 10)}
+                    onChange={e => { setDateFrom(e.target.value); setDateError('') }}
+                    className="w-full border border-[#e5e7eb] rounded-xl px-3 py-2.5 text-[13px] focus:outline-none focus:border-[#1e40af] focus:ring-2 focus:ring-[#1e40af]/10 cursor-pointer"
+                    dir="ltr"
                   />
                 </div>
                 <div>
-                  <label className="block text-[12px] font-semibold text-[#374151] mb-1">עד תאריך (DD/MM/YYYY)</label>
+                  <label className="block text-[12px] font-semibold text-[#374151] mb-1.5">
+                    <span className="flex items-center gap-1.5">
+                      <Calendar size={12} className="text-[#1e40af]" />
+                      עד תאריך
+                    </span>
+                  </label>
                   <input
-                    type="text"
-                    placeholder="31/12/2025"
+                    type="date"
                     value={dateTo}
-                    onChange={e => setDateTo(e.target.value)}
-                    className="w-full border border-[#e5e7eb] rounded-xl px-3 py-2 text-[13px] focus:outline-none focus:border-[#1e40af]"
+                    min={dateFrom || undefined}
+                    max={new Date().toISOString().slice(0, 10)}
+                    onChange={e => { setDateTo(e.target.value); setDateError('') }}
+                    className="w-full border border-[#e5e7eb] rounded-xl px-3 py-2.5 text-[13px] focus:outline-none focus:border-[#1e40af] focus:ring-2 focus:ring-[#1e40af]/10 cursor-pointer"
+                    dir="ltr"
                   />
                 </div>
               </div>
-              <div className="flex gap-3">
+
+              {/* Inline date validation error */}
+              {dateError && (
+                <div className="flex items-start gap-2 mt-3 mb-1 bg-red-50 border border-red-200 text-red-700 text-[12px] rounded-xl px-3 py-2.5">
+                  <AlertTriangle size={13} className="mt-0.5 flex-shrink-0" />
+                  {dateError}
+                </div>
+              )}
+
+              {/* Selected range preview */}
+              {(dateFrom || dateTo) && !dateError && (
+                <p className="text-[11px] text-[#6b7280] mt-3 text-center">
+                  {dateFrom && dateTo
+                    ? `טווח: ${toILDate(dateFrom)} – ${toILDate(dateTo)}`
+                    : dateFrom
+                    ? `מתאריך: ${toILDate(dateFrom)}`
+                    : `עד תאריך: ${toILDate(dateTo)}`
+                  }
+                </p>
+              )}
+
+              <div className="flex gap-3 mt-5">
                 <button
-                  onClick={() => setTriggerOpen(false)}
+                  onClick={() => { setTriggerOpen(false); setDateError('') }}
                   className="flex-1 px-4 py-2 rounded-xl border border-[#e5e7eb] text-[13px] text-[#374151] hover:bg-[#F8FAFF] transition-colors"
                 >
                   ביטול
@@ -165,8 +235,18 @@ export default function CourtRulings() {
 
         {/* Error */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-[13px] text-red-700">
-            {error}
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+            <AlertTriangle size={16} className="text-red-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="text-[13px] font-semibold text-red-700 mb-0.5">שגיאה בטעינת הפסיקות</p>
+              <p className="text-[12px] text-red-600">{error}</p>
+              <button
+                onClick={() => fetchRulings(page)}
+                className="mt-2 text-[12px] text-red-700 underline hover:text-red-900"
+              >
+                לחצו כאן לנסות שוב
+              </button>
+            </div>
           </div>
         )}
 

@@ -1,12 +1,26 @@
 import { useState } from 'react'
-import { Phone, Mail, MapPin, Clock, CheckCircle } from 'lucide-react'
+import { Phone, Mail, MapPin, Clock, CheckCircle, Navigation } from 'lucide-react'
 import { contactApi } from '../api/contact'
+import PhoneContactModal from '../components/ui/PhoneContactModal'
+
+const MAPS_URL = 'https://maps.google.com/?q=מצדה+9,+בני+ברק,+ישראל'
+const PHONE_TEL = 'tel:0527090457'
+const EMAIL_HREF = 'mailto:office.letsidchem@gmail.com'
+
+function isOfficeOpen(): boolean {
+  const now = new Date()
+  const day = now.getDay() // 0=Sun … 4=Thu are workdays in Israel
+  const mins = now.getHours() * 60 + now.getMinutes()
+  return day >= 0 && day <= 4 && mins >= 510 && mins < 870 // 08:30–14:30
+}
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+  const [showPhone, setShowPhone] = useState(false)
+  const open = isOfficeOpen()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); setLoading(true); setError('')
@@ -14,13 +28,6 @@ export default function Contact() {
     catch (err: unknown) { setError(err instanceof Error ? err.message : 'שגיאה בשליחת הטופס. נסו שוב.') }
     finally { setLoading(false) }
   }
-
-  const contacts = [
-    { icon: Phone,  title: 'טלפון',        value: '052-7090457',              href: 'tel:0527090457' },
-    { icon: Mail,   title: 'אימייל',        value: 'office.letsidchem@gmail.com', href: 'mailto:office.letsidchem@gmail.com' },
-    { icon: MapPin, title: 'כתובת ראשית',   value: 'מצדה 9, בני ברק',          href: undefined },
-    { icon: Clock,  title: 'שעות פעילות',   value: 'א׳–ה׳, 08:30–14:30',       href: undefined },
-  ]
 
   return (
     <div dir="rtl" className="bg-white min-h-screen">
@@ -50,25 +57,77 @@ export default function Contact() {
             {/* Info */}
             <div className="lg:col-span-2 space-y-4">
               <h2 className="text-[20px] font-black text-[#111827] mb-6">פרטי התקשרות</h2>
-              {contacts.map((c, i) => {
-                const Icon = c.icon
-                return (
-                  <div key={i} className="card card-accent p-4 flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-[#dbeafe] flex items-center justify-center flex-shrink-0">
-                      <Icon size={16} className="text-[#1e40af]" />
-                    </div>
-                    <div>
-                      <p className="text-[11px] text-[#9ca3af] font-semibold uppercase tracking-wider mb-0.5">{c.title}</p>
-                      {c.href
-                        ? <a href={c.href} className="text-[14px] font-semibold text-[#111827] hover:text-[#1e40af] transition-colors">{c.value}</a>
-                        : <p className="text-[14px] font-semibold text-[#111827]">{c.value}</p>
-                      }
-                    </div>
-                  </div>
-                )
-              })}
 
-              <div className="bg-gradient-to-br from-[#1e40af] to-[#2563eb] rounded-2xl p-5 text-white mt-6">
+              {/* Phone */}
+              <button
+                onClick={() => setShowPhone(true)}
+                className="card card-accent p-4 flex items-start gap-4 w-full text-right hover:border-[#1e40af] transition-colors"
+              >
+                <div className="w-10 h-10 rounded-xl bg-[#dbeafe] flex items-center justify-center flex-shrink-0">
+                  <Phone size={16} className="text-[#1e40af]" />
+                </div>
+                <div>
+                  <p className="text-[11px] text-[#9ca3af] font-semibold uppercase tracking-wider mb-0.5">טלפון</p>
+                  <p className="text-[14px] font-semibold text-[#111827]">052-7090457</p>
+                  <p className="text-[12px] text-[#1e40af] mt-0.5">לחצו להתקשרות או WhatsApp</p>
+                </div>
+              </button>
+
+              {/* Email */}
+              <div className="card card-accent p-4 flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#dbeafe] flex items-center justify-center flex-shrink-0">
+                  <Mail size={16} className="text-[#1e40af]" />
+                </div>
+                <div>
+                  <p className="text-[11px] text-[#9ca3af] font-semibold uppercase tracking-wider mb-1">אימייל</p>
+                  <a href={EMAIL_HREF}
+                     className="text-[14px] font-semibold text-[#111827] hover:text-[#1e40af] transition-colors break-all">
+                    office.letsidchem@gmail.com
+                  </a>
+                </div>
+              </div>
+
+              {/* Location */}
+              <div className="card card-accent p-4 flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#dbeafe] flex items-center justify-center flex-shrink-0">
+                  <MapPin size={16} className="text-[#1e40af]" />
+                </div>
+                <div>
+                  <p className="text-[11px] text-[#9ca3af] font-semibold uppercase tracking-wider mb-1">כתובת ראשית</p>
+                  <a href={MAPS_URL} target="_blank" rel="noopener noreferrer"
+                     className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#111827] hover:text-[#1e40af] transition-colors">
+                    מצדה 9, בני ברק
+                    <Navigation size={13} className="text-[#1e40af]" />
+                  </a>
+                </div>
+              </div>
+
+              {/* Hours */}
+              <div className="card card-accent p-4 flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#dbeafe] flex items-center justify-center flex-shrink-0">
+                  <Clock size={16} className="text-[#1e40af]" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-[11px] text-[#9ca3af] font-semibold uppercase tracking-wider mb-1">שעות פעילות</p>
+                  <div className="flex items-center gap-2 flex-wrap mb-2">
+                    <p className="text-[14px] font-semibold text-[#111827]">א׳–ה׳, 08:30–14:30</p>
+                    <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full ${open ? 'bg-[#d1fae5] text-[#059669]' : 'bg-red-50 text-red-600'}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${open ? 'bg-[#059669]' : 'bg-red-500'}`} />
+                      {open ? 'פתוח כעת' : 'סגור כעת'}
+                    </span>
+                  </div>
+                  {!open && (
+                    <button
+                      onClick={() => setShowPhone(true)}
+                      className="inline-flex items-center gap-2 text-[12px] font-bold text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-xl transition-colors"
+                    >
+                      <Phone size={12} /> קו חירום: 052-7090457
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-[#1e40af] to-[#2563eb] rounded-2xl p-5 text-white mt-2">
                 <p className="text-[13px] font-bold mb-1">סניפים ברחבי הארץ</p>
                 <p className="text-white/70 text-[12px] leading-relaxed">
                   בני ברק • ראשון לציון • ירושלים • תל אביב • רמת גן • טבריה • מודיעין ועוד
@@ -135,6 +194,7 @@ export default function Contact() {
           </div>
         </div>
       </section>
+      {showPhone && <PhoneContactModal onClose={() => setShowPhone(false)} />}
     </div>
   )
 }
