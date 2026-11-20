@@ -47,10 +47,9 @@ function useImageUpload() {
 }
 
 function ImageUploadField({
-  preview, fileRef, onPickFile, onRemove, loading,
+  preview, onPickFile, onRemove, loading,
 }: {
   preview: string | null
-  fileRef: React.RefObject<HTMLInputElement>
   onPickFile: () => void
   onRemove: () => void
   loading: boolean
@@ -173,7 +172,7 @@ function NewWebinarModal({ onClose }: { onClose: () => void }) {
             <span className="text-[13px] font-medium text-[#374151]">פעיל (גלוי למשתמשים)</span>
           </div>
 
-          <ImageUploadField preview={preview} fileRef={fileRef} onPickFile={() => fileRef.current?.click()} onRemove={removeImage} loading={loading} />
+          <ImageUploadField preview={preview} onPickFile={() => fileRef.current?.click()} onRemove={removeImage} loading={loading} />
           <input ref={fileRef} type="file" accept="image/jpeg,image/jpg,image/png,image/webp" className="hidden"
             onChange={e => handleImage(e, setError)} />
 
@@ -283,7 +282,7 @@ function NewLegalPostModal({ onClose }: { onClose: () => void }) {
             <input type="text" placeholder="למשל: גירושין, משמורת, זכויות" value={tags} onChange={e => setTags(e.target.value)} disabled={loading} className="input w-full" />
           </div>
 
-          <ImageUploadField preview={preview} fileRef={fileRef} onPickFile={() => fileRef.current?.click()} onRemove={removeImage} loading={loading} />
+          <ImageUploadField preview={preview} onPickFile={() => fileRef.current?.click()} onRemove={removeImage} loading={loading} />
           <input ref={fileRef} type="file" accept="image/jpeg,image/jpg,image/png,image/webp" className="hidden"
             onChange={e => handleImage(e, setError)} />
 

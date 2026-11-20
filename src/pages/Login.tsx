@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff, ArrowRight, Mail, MessageCircle, Loader2 } from 'lucide-react'
+import { Eye, EyeOff, ArrowRight, Mail, Loader2 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { authApi } from '../api/auth'
 

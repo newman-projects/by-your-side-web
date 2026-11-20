@@ -4,7 +4,6 @@ import { Phone, Mail, MapPin, Clock } from 'lucide-react'
 import PhoneContactModal from '../ui/PhoneContactModal'
 
 const MAPS_URL = 'https://maps.google.com/?q=מצדה+9,+בני+ברק,+ישראל'
-const PHONE_TEL = 'tel:0527090457'
 
 function isOfficeOpen(): boolean {
   const now = new Date()

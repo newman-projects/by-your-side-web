@@ -4,7 +4,6 @@ import { contactApi } from '../api/contact'
 import PhoneContactModal from '../components/ui/PhoneContactModal'
 
 const MAPS_URL = 'https://maps.google.com/?q=מצדה+9,+בני+ברק,+ישראל'
-const PHONE_TEL = 'tel:0527090457'
 const EMAIL_HREF = 'mailto:office.letsidchem@gmail.com'
 
 function isOfficeOpen(): boolean {
