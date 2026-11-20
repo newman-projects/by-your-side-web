@@ -28,3 +28,6 @@ dist-ssr
 
 # graphify
 graphify-out/
+
+# local workflow/scratch files
+workflow.json

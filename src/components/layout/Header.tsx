@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { Menu, X, LogOut, ChevronDown } from 'lucide-react'
+import { Menu, X, LogOut, ChevronDown, User, ShoppingCart, MessageCircle, Shield } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 
 const navLinks = [
@@ -8,8 +8,10 @@ const navLinks = [
   { label: 'אודות', href: '/about' },
   { label: 'שירותים', href: '/services' },
   { label: 'קהילה', href: '/community' },
+  { label: 'קבוצות', href: '/groups' },
   { label: 'מאמרים', href: '/articles' },
-  { label: 'התנדבות', href: '/volunteer' },
+  { label: 'מדריכים', href: '/guides' },
+  { label: 'מוקד חירום', href: '/emergency' },
   { label: 'צרו קשר', href: '/contact' },
 ]
 
@@ -91,18 +93,24 @@ export default function Header() {
                 </button>
 
                 {profileOpen && (
-                  <div className="absolute left-0 top-full mt-2 w-52 bg-white rounded-2xl shadow-2xl border border-black/6 overflow-hidden anim-fade-in">
+                  <div className="absolute left-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-black/6 overflow-hidden anim-fade-in">
                     <div className="p-4 bg-[#F8FAFF] border-b border-black/5">
                       <p className="text-[13px] font-semibold text-[#111827]">{user.full_name}</p>
                       <p className="text-[11px] text-[#6b7280] truncate mt-0.5">{user.email}</p>
                     </div>
+                    <Link to="/profile" className="flex items-center gap-2.5 w-full px-4 py-3 text-[13px] text-[#374151] hover:bg-[#F8FAFF] transition-colors font-medium border-b border-black/5">
+                      <User size={14} className="text-[#6b7280]" /> פרופיל
+                    </Link>
+                    <Link to="/cart" className="flex items-center gap-2.5 w-full px-4 py-3 text-[13px] text-[#374151] hover:bg-[#F8FAFF] transition-colors font-medium border-b border-black/5">
+                      <ShoppingCart size={14} className="text-[#6b7280]" /> עגלת קניות
+                    </Link>
+                    <Link to="/chat" className="flex items-center gap-2.5 w-full px-4 py-3 text-[13px] text-[#374151] hover:bg-[#F8FAFF] transition-colors font-medium border-b border-black/5">
+                      <MessageCircle size={14} className="text-[#6b7280]" /> הודעות
+                    </Link>
                     {isAdmin && (
-                      <a
-                        href="/court-rulings"
-                        className="flex items-center gap-2.5 w-full px-4 py-3 text-[13px] text-[#1e40af] hover:bg-[#F0F4FF] transition-colors font-medium border-b border-black/5"
-                      >
-                        פסיקות בית משפט
-                      </a>
+                      <Link to="/admin" className="flex items-center gap-2.5 w-full px-4 py-3 text-[13px] text-[#1e40af] hover:bg-[#F0F4FF] transition-colors font-medium border-b border-black/5">
+                        <Shield size={14} /> פאנל ניהול
+                      </Link>
                     )}
                     <button
                       onClick={handleLogout}
