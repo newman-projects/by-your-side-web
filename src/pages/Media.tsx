@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Tv, Newspaper, ExternalLink, Youtube, Facebook, ArrowLeft } from 'lucide-react'
+import { Tv, Newspaper, ExternalLink, ArrowLeft, Play, Users } from 'lucide-react'
 
 const pressItems = [
   {
@@ -72,7 +72,7 @@ const pressItems = [
 
 const socialLinks = [
   {
-    icon: Youtube,
+    icon: Play,
     name: 'YouTube',
     desc: 'סרטונים, ראיונות ומעגלי שיח',
     color: '#dc2626',
@@ -81,7 +81,7 @@ const socialLinks = [
     cta: 'עקבו בYouTube',
   },
   {
-    icon: Facebook,
+    icon: Users,
     name: 'Facebook',
     desc: 'עדכונים, מאמרים ופעילות הארגון',
     color: '#1d4ed8',

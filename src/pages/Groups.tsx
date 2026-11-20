@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Users, Heart, Shield, Stethoscope, MapPin, Clock, Calendar, ArrowLeft } from 'lucide-react'
+import { Users, Heart, Shield, Stethoscope, MapPin, Calendar, ArrowLeft } from 'lucide-react'
 
 const groups = [
   {

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { BookOpen, Users, TrendingUp, ArrowLeft, FileText, BarChart2 } from 'lucide-react'
+import { Users, TrendingUp, ArrowLeft, FileText, BarChart2 } from 'lucide-react'
 
 const papers = [
   {
